@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="VerifyCode.aspx.cs" Inherits="验证码.验证码.VerifyCode" %>

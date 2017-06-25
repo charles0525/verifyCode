@@ -1,0 +1,33 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div>
+        @*<img src="/验证码/checkcode.aspx" /><br />
+            <img src="/验证码/yanzhengma.aspx" /><br />*@
+        <img id="imgCode" src="/验证码/VerifyCode.aspx" /><br /><input type="text" id="code" /> <input type="button" id="btn" value="确定" />
+    </div>
+</body>
+</html>
+<script src="~/scripts/jquery-3.0.0.min.js"></script>
+<script>
+    $(function () {
+        $('#imgCode').on('click', function () {
+            $(this).attr('src', '/验证码/VerifyCode.aspx?v=' + Math.random());
+        });
+        $('#btn').on('click', function () {
+            $.post('/home/check', { code: $('#code').val() }, function (data) {
+                alert(data.msg);
+            });
+        });
+    });
+</script>
