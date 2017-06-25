@@ -85,27 +85,34 @@ namespace 验证码
         /// <returns></returns>
         static Tuple<string, int> GenerateFormula()
         {
-            var operatorRdIndex = new Random().Next(0, arrOperators.Length) ;
+            var operatorRdIndex = new Random().Next(0, arrOperators.Length);
             var operatorsStr = arrOperators[operatorRdIndex];
-            var num1 = GenerateRdNum(2);
-            var num2 = GenerateRdNum(1);
-            if (num1 < num2)
-            {
-                num1 = num2 + GenerateRdNum(1);
-            }
-
-            var formula = string.Format("{0}{1}{2}=？", num1, operatorsStr, num2);
+            var num1 = 0;
+            var num2 = 0;
             var result = 0;
             switch (operatorsStr)
             {
                 case "+":
+                    num1 = GenerateRdNum(2);
+                    num2 = GenerateRdNum(1);
                     result = num1 + num2;
                     break;
                 case "-":
+                    num1 = GenerateRdNum(2);
+                    num2 = GenerateRdNum(1);
+                    if (num1 < num2)
+                    {
+                        num1 = num2 + GenerateRdNum(1);
+                    }
                     result = num1 - num2;
                     break;
+                case "×":
+                    num1 = GenerateRdNum(1);
+                    num2 = GenerateRdNum(1);
+                    result = num1 * num2;
+                    break;
             }
-
+            var formula = string.Format("{0}{1}{2}=？", num1, operatorsStr, num2);
             return new Tuple<string, int>(formula, result);
         }
 
@@ -265,10 +272,19 @@ namespace 验证码
                 lenth = 1;
             }
             var max = (int)(Math.Pow(10, lenth) - 1);
-            return new Random().Next(1, max);
+            return new Random(GetRandomSeed()).Next(1, max);
         }
 
-        static readonly string[] arrOperators = new string[] { "+", "-" };
+        static int GetRandomSeed()
+        {
+            byte[] bytes = new byte[4];
+            System.Security.Cryptography.RNGCryptoServiceProvider rng
+                = new System.Security.Cryptography.RNGCryptoServiceProvider();
+            rng.GetBytes(bytes);
+            return BitConverter.ToInt32(bytes, 0);
+        }
+
+        static readonly string[] arrOperators = new string[] { "+", "-", "×" };
         static readonly string[] arrBgImgs = new string[] {
             "verifyimg.jpg", "verifyimg1.jpg", "verifyimg2.jpg", "verifyimg3.jpg"
         };
